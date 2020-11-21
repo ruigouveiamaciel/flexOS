@@ -1,3 +1,5 @@
+-- pastebin run ENPqkZ5H
+
 local user = "ruigouveiamaciel"
 local repo = "flexOS"
 local ref = "master"
@@ -8,9 +10,10 @@ local function getDownloadURL(user, repo, ref, path)
     return "https://raw.githubusercontent.com/" .. user .. "/" .. repo .. "/" .. ref .."/" .. path
 end
 
-local resquest = http.get(getDownloadURL(user, repo, ref, path))
+local request = http.get(getDownloadURL(user, repo, ref, path))
 local code = request.readAll()
 request.close()
 
-local github = load(code)
+local github = load(code)()
 github.pull("/", user, repo, ref)
+os.reboot()
