@@ -1,5 +1,5 @@
 local user = "ruigouveiamaciel"
-local repo = "gdocs"
+local repo = "flexOS"
 local ref = "master"
 local path = "api/github.lua"
 
