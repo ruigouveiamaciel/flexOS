@@ -24,14 +24,22 @@ local function getMenuCommands(path)
             error(fullPath .. " is not a valid command. Doesn't have the .lua extension")
         end
 
-        commands[i] = require(modulePath)
+        local command = require(modulePath)
 
-        if type(commands[i]) ~= "table" then
+        if type(command) ~= "table" then
             error(fullPath .. " is not a valid command.")
-        elseif type(commands[i].execute) ~= "function" then
+        elseif type(command.execute) ~= "function" then
             error(fullPath .. " is missing the execute method")
-        elseif type(commands[i].label) ~= "string" then
+        elseif type(command.label) ~= "string" then
             error(fullPath .. " is missing the label attribute")
+        end
+
+        if type(command.predicate) == "function" then
+            if command.predicate() then
+                table.insert(command)
+            end
+        elseif command.predicate == nil or command.predicate then
+            table.insert(command)
         end
     end
 
