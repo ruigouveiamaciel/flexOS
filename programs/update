@@ -18,11 +18,14 @@ window:setTitleLabel(TXUI.Label:new({
     textAlign = "left",
 }))
 
+local tiny = w < 30
+
+
 local statusLabel = TXUI.Label:new({
     x = 1,
-    y = math.floor(h / 2 - 1) - 1,
+    y = tiny and (math.floor(h / 2 - 3) - 1) or (math.floor(h / 2 - 1) - 1),
     w = w,
-    h = 3,
+    h = 5,
     text = "Checking for updates...",
     bgColor = window.bgColor,
     textColor = colors.white,
@@ -31,8 +34,8 @@ local statusLabel = TXUI.Label:new({
 
 local updateButton = TXUI.Button:new({
     x = 4,
-    y = math.ceil(h / 2 + 1),
-    w = math.floor((w - 11) / 2),
+    y = tiny and math.ceil(h / 2 + 1) or math.ceil(h / 2 + 1),
+    w = tiny and w - 6 or math.floor((w - 11) / 2),
     text = "Update",
     bgColor = colors.lightGray,
     activeColor = colors.lightGray,
@@ -41,8 +44,8 @@ local updateButton = TXUI.Button:new({
 })
 
 local cancelButton = TXUI.Button:new({
-    x = w - 3 - updateButton.w,
-    y = updateButton.y,
+    x = tiny and 4 or w - 3 - updateButton.w,
+    y = tiny and updateButton.y + 4 or updateButton.y,
     w = updateButton.w,
     h = updateButton.h,
     text = "Cancel",
@@ -70,7 +73,8 @@ end, function()
 
     if status then
         if not updateAvailable then
-            statusLabel.text = "System is up to date.\nClosing this window in 3 seconds..."
+            statusLabel.text = tiny and "System is up to date.\nClosing this window\nin 3 seconds..."
+                or "System is up to date.\nClosing this window in 3 seconds..."
             cancelButton.text = "Close"
             window:draw()
 
@@ -78,7 +82,8 @@ end, function()
             return
         end
 
-        statusLabel.text = "Update available, do you want to update?\n"
+        statusLabel.text = tiny and "Update available,\ndo you want to update?\n"
+            or "Update available, do you want to update?\n"
         statusLabel.textColor = colors.lime
         updateButton.textColor = colors.white
         updateButton.activeTextColor = updateButton.textColor
@@ -93,7 +98,7 @@ end, function()
         parallel.waitForAny(function()
             os.pullEvent("updater_answer")
         end, function()
-            sleep(15)
+            sleep(999)
         end)
 
         statusLabel.text = "Downloading updates...\n"
@@ -128,7 +133,8 @@ end, function()
     else
         local err = updateAvailable or "INVALID ERROR MESSAGE"
         statusLabel.textColor = colors.red
-        statusLabel.text = "Failed to fetch for updates!\n" .. err
+        statusLabel.text = tiny and ("Failed to fetch\nfor updates!\n" .. err) or
+            ("Failed to fetch for updates!\n" .. err)
         errorOutput(statusLabel.text)
         window:draw()
         sleep(7)
