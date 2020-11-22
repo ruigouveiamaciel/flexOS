@@ -36,10 +36,10 @@ local function getMenuCommands(path)
 
         if type(command.predicate) == "function" then
             if command.predicate() then
-                table.insert(command)
+                table.insert(commands, command)
             end
         elseif command.predicate == nil or command.predicate then
-            table.insert(command)
+            table.insert(commands, command)
         end
     end
 
