@@ -257,7 +257,7 @@ function wave.output:playNote(note, pitch, volume)
 			end
 		end
 	end
-	if self.filter[note] and self.notes < self.throttle then
+	if self.notes < self.throttle then
 		self.nativePlayNote(note, pitch, volume * self.volume)
 		self.notes = self.notes + 1
 	end
