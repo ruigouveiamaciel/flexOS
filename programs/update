@@ -62,7 +62,7 @@ window:addComponent(updateButton)
 parallel.waitForAny(function()
     TXUI.Controller:startUpdateCycle()
 end, function()
-    local status, updateAvailable, pull = pcall(github.fetch, "/repo", "ruigouveiamaciel", "gdocs")
+    local status, updateAvailable, pull = pcall(github.fetch, "/", "ruigouveiamaciel", "flexOS")
 
     if status then
         if not updateAvailable then
