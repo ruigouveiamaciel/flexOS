@@ -5,4 +5,4 @@ else
     settings.set("system.autoupdate", true)
 end
 
-shell.execute("/update")
+shell.execute("/programs/update")
