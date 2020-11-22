@@ -53,7 +53,11 @@ local cancelButton = TXUI.Button:new({
     end
 })
 
-
+local function errorOutput(msg)
+    local out = fs.open("/errorlog", "w")
+    out.write(msg)
+    out.close()
+end
 
 window:addComponent(statusLabel)
 window:addComponent(cancelButton)
@@ -117,6 +121,7 @@ end, function()
             pullErr = pullErr or "INVALID ERROR MESSAGE"
             statusLabel.textColor = colors.red
             statusLabel.text = "Failed to download updates!\n" .. pullErr
+            errorOutput(statusLabel.text)
             window:draw()
             sleep(7)
         end
@@ -124,6 +129,7 @@ end, function()
         local err = updateAvailable or "INVALID ERROR MESSAGE"
         statusLabel.textColor = colors.red
         statusLabel.text = "Failed to fetch for updates!\n" .. err
+        errorOutput(statusLabel.text)
         window:draw()
         sleep(7)
     end
