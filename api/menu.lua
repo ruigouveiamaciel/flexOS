@@ -183,6 +183,7 @@ function menu.open(title, path, returnButton, page)
         end
 
         pageLabel.text = "Page " .. page .. " of " .. pages
+        pageLabel.visible = w > 30
 
         window:draw()
     end
