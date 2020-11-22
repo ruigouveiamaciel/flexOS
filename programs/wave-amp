@@ -172,6 +172,8 @@ function wave.context:update(interval)
 	end
 end
 
+local a = fs.open("out", "a")
+
 
 
 function wave.createOutput(out, volume, filter, throttle, clipMode)
@@ -198,6 +200,8 @@ function wave.createOutput(out, volume, filter, throttle, clipMode)
 				output.type = "speaker"
 				function output.nativePlayNote(note, pitch, volume)
 					if output.volume * volume > 0 then
+						a.write(note)
+						a.flush
 						nb.playSound("minecraft:block.note."..wave._newSoundMap[note], volume, math.pow(2, (pitch - 12) / 12))
 					end
 				end
