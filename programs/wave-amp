@@ -48,7 +48,7 @@ local wave = { }
 wave.version = "0.1.4"
 
 wave._oldSoundMap = {"harp", "bassattack", "bd", "snare", "hat"}
-wave._newSoundMap = {"harp", "bass", "basedrum", "snare", "hat"}
+wave._newSoundMap = {"harp", "bass", "basedrum", "snare", "hat", "guitar", "flute", "bell", "chime", "xylophone"}
 wave._defaultThrottle = 99
 wave._defaultClipMode = 1
 wave._maxInterval = 1
