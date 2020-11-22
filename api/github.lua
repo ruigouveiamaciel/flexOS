@@ -6,9 +6,19 @@ local function getTreeURL(user, repo, ref)
     return "https://api.github.com/repos/".. user .."/".. repo .."/git/trees/" .. ref .. "?recursive=true"
 end
 
+local function urlPath(path)
+    local cleanPath = ""
+    for i, dir in pairs(string.gmatch(path, "[^ ]+")) do
+        if i ~= 1 then
+            cleanPath = cleanPath + "%20"
+        end
+        cleanPath = cleanPath + dir
+    end
+end
+
 local function getDownloadURL(user, repo, ref, path)
     ref = ref or "master"
-    return "https://raw.githubusercontent.com/" .. user .. "/" .. repo .. "/" .. ref .."/" .. textutils.urlEncode(path)
+    return "https://raw.githubusercontent.com/" .. user .. "/" .. repo .. "/" .. ref .."/" .. urlPath(path)
 end
 
 local github_token = settings.get("github.token", nil)
