@@ -156,7 +156,7 @@ local function compareContents(computer, remote)
     return different, delete, download
 end
 
-local function delete(path, notFirst)
+local function deleteFile(path, notFirst)
     if path ~= nil then
         if fs.isDir(path) then
             if #fs.list(path) == 0 then
@@ -183,7 +183,7 @@ local function deleteAndDownload(path, delete, download)
     local deletions = {}
     for itemPath, _ in pairs(delete) do
         table.insert(deletions, function()
-            delete(fs.combine(path, itemPath))
+            deleteFile(fs.combine(path, itemPath))
         end)
     end
 
