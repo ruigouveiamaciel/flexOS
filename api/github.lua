@@ -8,7 +8,7 @@ end
 
 local function urlPath(path)
     local cleanPath = ""
-    for i, dir in pairs(string.gmatch(path, "[^ ]+")) do
+    for i, dir in string.gmatch(path, "[^ ]+") do
         if i ~= 1 then
             cleanPath = cleanPath + "%20"
         end
