@@ -143,9 +143,9 @@ function wave.context:playNote(note, pitch, volume)
 	volume = volume or 1.0
 
 	self.vs[note] = self.vs[note] + volume
-	for i = 1, #self.outputs do
-		self.outputs[i]:playNote(note, pitch, volume * self.volume)
-	end
+ 	self.speakern = ((self.speakern or 0) + 1) % #self.outputs
+	local i = self.speakern + 1
+	self.outputs[i]:playNote(note, pitch, volume * self.volume)
 end
 
 function wave.context:update(interval)
@@ -159,7 +159,7 @@ function wave.context:update(interval)
 	for i = 1, #self.outputs do
 		self.outputs[i].notes = 0
 	end
-	for i = 1, 5 do
+	for i = 1, 10 do
 		self.vs[i] = 0
 	end
 	if interval > 0 then
@@ -172,13 +172,9 @@ function wave.context:update(interval)
 	end
 end
 
-local a = fs.open("out", "a")
-
-
-
 function wave.createOutput(out, volume, filter, throttle, clipMode)
 	volume = volume or 1.0
-	filter = filter or {true, true, true, true, true}
+	filter = filter or {true, true, true, true, true, true, true, true, true, true}
 	throttle = throttle or wave._defaultThrottle
 	clipMode = clipMode or wave._defaultClipMode
 
@@ -200,8 +196,6 @@ function wave.createOutput(out, volume, filter, throttle, clipMode)
 				output.type = "speaker"
 				function output.nativePlayNote(note, pitch, volume)
 					if output.volume * volume > 0 then
-						a.write(note)
-						a.flush()
 						nb.playSound("minecraft:block.note."..wave._newSoundMap[note], volume, math.pow(2, (pitch - 12) / 12))
 					end
 				end
@@ -342,7 +336,7 @@ function wave.loadTrack(path)
 			end
 			local instrument = readInt(1)
 			local key = readInt(1)
-			if instrument <= 4 then -- nbs can be buggy
+			if instrument <= 9 then -- nbs can be buggy
 				track.layers[layer].notes[tick * 2 - 1] = instrument + 1
 				track.layers[layer].notes[tick * 2] = key - 33
 			end
