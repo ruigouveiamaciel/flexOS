@@ -116,7 +116,7 @@ end, function()
         else
             pullErr = pullErr or "INVALID ERROR MESSAGE"
             statusLabel.textColor = colors.red
-            statusLabel.text = "Failed to download updates!\n" .. pullErr
+            statusLabel.text = string.sub("Failed to download updates!\n" .. pullErr, 1, 51)
             window:draw()
             sleep(7)
         end
