@@ -169,7 +169,7 @@ local function deleteFile(path, notFirst)
         end
 
         local parent = string.match(path, "^(.*)/")
-        delete(parent)
+        deleteFile(parent)
     end
 end
 
