@@ -98,7 +98,7 @@ end, function()
         parallel.waitForAny(function()
             os.pullEvent("updater_answer")
         end, function()
-            sleep(999)
+            sleep(15)
         end)
 
         statusLabel.text = "Downloading updates...\n"
