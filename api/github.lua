@@ -8,12 +8,15 @@ end
 
 local function urlPath(path)
     local cleanPath = ""
-    for i, dir in string.gmatch(path, "[^ ]+") do
-        if i ~= 1 then
-            cleanPath = cleanPath + "%20"
+
+    for dir in string.gmatch(path, "[^ ]+") do
+        if cleanPath ~= "" then
+            cleanPath = cleanPath .. "%20"
         end
-        cleanPath = cleanPath + dir
+        cleanPath = cleanPath .. dir
     end
+
+    return cleanPath
 end
 
 local function getDownloadURL(user, repo, ref, path)
