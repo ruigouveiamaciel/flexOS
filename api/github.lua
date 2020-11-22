@@ -17,7 +17,8 @@ local allowedExtensions = {
     ["txt"] = true,
     ["json"] = true,
     ["lua"] = true,
-    [""] = true
+    [""] = true,
+    ["nbs"] = true
 }
 
 local function getRequestHeaders()
