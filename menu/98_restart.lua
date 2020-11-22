@@ -1,6 +1,6 @@
 return {
     execute = function()
-        os.restart()
+        os.reboot()
     end,
     label = "Restart machine"
 }

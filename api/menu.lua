@@ -3,12 +3,8 @@ TXUI = require("/api/txui")
 local menu = {}
 
 local w, h = term.getSize()
-local columnsPerPage = math.ceil(w / 50)
-local rowHeight = 2
-local rowsPerPage = math.floor((h - 4) / rowHeight)
-local commandsPerPage = columnsPerPage * rowsPerPage
-local commandWidth = math.floor((w - 2) / columnsPerPage)
-
+local itemHeight = 2
+local itemsPerPage = math.floor((h - 4) / itemHeight)
 
 local function getMenuCommands(path)
     if not fs.isDir(path) then
@@ -48,8 +44,9 @@ end
 
 function menu.open(title, path, returnButton, page)
     local commands = getMenuCommands(path)
+    local pages = math.ceil(#commands / itemsPerPage)
     returnButton = returnButton == nil and true or false
-    page = page or 0
+    page = page or 1
 
     local w, h = term.getSize()
     local window = TXUI.Window:new({
@@ -87,11 +84,12 @@ function menu.open(title, path, returnButton, page)
         w = 7,
         h = 1,
         text = " < Back ",
-        textColor = colors.white,
-        activeTextColor = colors.white,
-        bgColor = colors.red,
-        activeBgColor = colors.red,
-        textAlign = "left"
+        textAlign = "left",
+        action = function(self)
+            if page > 1 then
+                loadPage(page - 1)
+            end
+        end
     })
 
     local nextButton = TXUI.Button:new({
@@ -100,31 +98,38 @@ function menu.open(title, path, returnButton, page)
         h = 1,
         w = 8,
         text = " Next > ",
-        textColor = colors.white,
-        activeTextColor = colors.white,
-        bgColor = colors.green,
-        activeBgColor = colors.green,
         textAlign = "right",
         action = function(self)
-            self.parent:close()
+            if page < pages then
+                loadPage(page + 1)
+            end
         end
+    })
+
+    local pageLabel = TXUI.Label:new({
+        y = h - 1,
+        x = 4 + backButton.w,
+        h = 1,
+        w = w - 5 - nextButton.w - backButton.w,
+        bgColor = colors.lightGray,
+        textColor = colors.gray,
+        textAlign = "center"
     })
 
     window:addComponent(backButton)
     window:addComponent(nextButton)
+    window:addComponent(pageLabel)
 
     local buttons = {}
     local exec
 
     for i, command in ipairs(commands) do
-        local item = i % commandsPerPage
-        local line = item % rowsPerPage
-
-        local label = " " .. command.label .. " "
+        local item = (i - 1) % itemsPerPage
+        local label = " " .. string.sub(command.label, 1, w - 4) .. " "
         local len = string.len(label)
 
         buttons[i] = TXUI.Button:new({
-            y = 1 + line * rowHeight,
+            y = 3 + item * itemHeight,
             x = 2,
             h = 1,
             w = len,
@@ -132,7 +137,7 @@ function menu.open(title, path, returnButton, page)
             textColor = colors.white,
             activeTextColor = colors.white,
             bgColor = colors.green,
-            activeBgColor = colors.green,
+            activeColor = colors.green,
             textAlign = "left",
             action = function(self)
                 self.parent:close()
@@ -142,6 +147,47 @@ function menu.open(title, path, returnButton, page)
 
         window:addComponent(buttons[i])
     end
+
+    function loadPage(p)
+        page = p
+        for _, button in ipairs(buttons) do
+            button.visible = false
+        end
+        for i = 1 + itemsPerPage * (page - 1), itemsPerPage * page do
+            if buttons[i] then
+                buttons[i].visible = true
+            end
+        end
+
+        if page == 1 then
+            backButton.textColor = colors.gray
+            backButton.activeTextColor = colors.gray
+            backButton.bgColor = colors.lightGray
+            backButton.activeColor = colors.lightGray
+        else
+            backButton.textColor = colors.white
+            backButton.activeTextColor = colors.white
+            backButton.bgColor = colors.red
+            backButton.activeColor = colors.red
+        end
+        if page == pages then
+            nextButton.textColor = colors.gray
+            nextButton.activeTextColor = colors.gray
+            nextButton.bgColor = colors.lightGray
+            nextButton.activeColor = colors.lightGray
+        else
+            nextButton.textColor = colors.white
+            nextButton.activeTextColor = colors.white
+            nextButton.bgColor = colors.green
+            nextButton.activeColor = colors.green
+        end
+
+        pageLabel.text = "Page " .. page .. " of " .. pages
+
+        window:draw()
+    end
+
+    loadPage(page)
 
     pcall(function()
         TXUI.Controller:startUpdateCycle()

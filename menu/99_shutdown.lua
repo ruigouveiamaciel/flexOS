@@ -1,6 +1,6 @@
 return {
     execute = function()
-        os.restart()
+        os.shutdown()
     end,
     label = "Shutdown machine"
 }
