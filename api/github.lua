@@ -8,7 +8,7 @@ end
 
 local function getDownloadURL(user, repo, ref, path)
     ref = ref or "master"
-    return "https://raw.githubusercontent.com/" .. user .. "/" .. repo .. "/" .. ref .."/" .. path
+    return "https://raw.githubusercontent.com/" .. user .. "/" .. repo .. "/" .. ref .."/" .. textutils.urlEncode(path)
 end
 
 local github_token = settings.get("github.token", nil)
