@@ -66,7 +66,7 @@ end, function()
 
     if status then
         if not updateAvailable then
-            statusLabel.text = "System is up to date.\nClosing this window in 3 seconds..."
+            statusLabel.text = tostring(updateAvailable) .. "System is up to date.\nClosing this window in 3 seconds..."
             cancelButton.text = "Close"
             window:draw()
 
